@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
-import 'dart:developer';
+import 'package:dio/dio.dart';
+import 'dart:convert';
+import 'dart:io';
 
-
+import '../modelEntity/result.dart';
+import '../modelEntity/result_body.dart';
 
 class HomePage extends StatelessWidget {
   HomePage({Key key}) : super(key: key);
   static String color1 = '#fff333';
+
   // final String params;
   @override
   Widget build(BuildContext context) {
@@ -13,43 +17,127 @@ class HomePage extends StatelessWidget {
     var args = ModalRoute.of(context).settings.arguments;
    
     return Scaffold(
-      appBar: AppBar(
-        title: Text(args),
+      appBar:  AppBar(
+          leading:  Icon(Icons.toll,color:Colors.cyan,),
+          title:  Text('你好 ${args} ',style: TextStyle(color: Colors.cyan[400]),),
+          backgroundColor: Colors.yellow,
+          centerTitle:true,
+          actions: <Widget>[
+              IconButton(
+                icon: Icon(Icons.track_changes,color:Colors.cyan,),
+              ),
+          ],
       ),
       body:Container(
-        width: 200.0,
-        height: 200.0,
-        
-        child:Center(
-          child: Text(
-            'ainizaixin kounankaiainizaixin kounankai',
-            textAlign:TextAlign.center,
-            overflow: TextOverflow.ellipsis,
-            style: TextStyle(
-              color: Colors.blue,
-              fontSize: 24.0,
-              background: new Paint()..color = Colors.yellow,
-            ),
-          ),
-        )
-      )
-      // body: Center(
-      //   child: Text(
-      //     "This is new route",
-      //     textAlign: TextAlign.left,
-      //     // style: TextStyle(
-      //     //     color: Colors.blue,
-      //     //     fontSize: 18.0,
-      //     //     height: 1.2,
-      //     //     fontFamily: "Courier",
-      //     //     background: new Paint()..color = Colors.yellow,
-      //     //     decoration: TextDecoration.underline,
-      //     //     decorationStyle: TextDecorationStyle.dashed
-      //     // ),
-      //   ),
-      // ),
+        child: ListContainer(),
+      ),
+      bottomNavigationBar:  BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+        items: [
+          BottomNavigationBarItem(
+              icon:  Icon(Icons.leak_add), 
+              title:  Text('mo')
+              ),
+          BottomNavigationBarItem(
+              icon:  Icon(Icons.adjust), 
+              title:  Text('adjust')
+              ),
+        ],
+      ),
+    );
+  }
+}
+
+/**
+ * 列表数据
+ * doi请求
+ */
+class ListContainer extends StatefulWidget {
+  ListContainer({Key key}) : super(key: key);
+
+  _ListContainerState createState() => _ListContainerState();
+}
+
+class _ListContainerState extends State<ListContainer> {
+  List playList;
+  
+  Future getListData ( {String name = '超人'} ) async {
+    try{
+      final url = "https://api.apiopen.top/searchMusic?name=${name}";
+      final response = await Dio().get<String>(url);
+      final body = jsonDecode(response.toString());
+        // List resultList  = json.decode(response.body)['result'];
+      var res = Result_body.fromJson(body).result;
+      print('<<==========请求成功============>>>>');
+      setState(() {
+            playList = res;
+      });
+    }catch(e){
+      print('<<==========请求失败============>>>>');
+      print(e.toString());
+    }
+  }
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getListData();
+  }
+  
+  @override
+  Widget build(BuildContext context) {
+    
+    return Container(
+      
+       child: ListView.builder(
+            itemCount: playList.length,
+            itemBuilder: (BuildContext context, int index) {
+              var item = playList[index];
+              return _buildItem(item);
+            }
+        ),
     );
   }
   
-  
+
+  Widget _buildItem(item){
+    return Card(
+      color: Colors.brown,
+      child: Padding(
+        padding: EdgeInsets.all(12),
+        child: Row(
+          children: <Widget>[
+            Image.network(item.pic ,height: 80,width: 80,fit: BoxFit.cover,),
+            SizedBox( width: 8,),
+            Expanded(
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(
+                      '${item.author}-${item.title}',
+                      textAlign: TextAlign.left,
+                      style: TextStyle(
+                          color: Colors.cyan,
+                          fontSize: 14.5
+                       ),
+                    ),
+                    Text(
+                      '${item.lrc}',
+                      maxLines:3,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        color: Colors.cyan,
+                        fontSize: 12.0,
+                      ),
+
+                    )
+                  ],
+              ),
+            ),
+            Icon(Icons.keyboard_arrow_right,color: Colors.cyan,)
+          ],
+          ),
+      ),
+    );
+  }
 }

@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:dio/dio.dart';
 
-/**
- *  登陆页面
- */
-// TODO : shouye
+// import 'package:fluttertoast/fluttertoast.dart';
+// TODO:  登录 
 class LoginPage extends StatefulWidget {
   LoginPage({Key key, this.title}) : super(key: key);
 
@@ -16,11 +15,22 @@ class _MyLoginHome extends State<LoginPage> {
 
    TextEditingController _userNameController = new TextEditingController();
    TextEditingController _userPwdController = new TextEditingController();
+ 
   void _handleClickSubmit() {
     print(_userNameController);
     if(_userNameController.text == 'tom' && _userPwdController.text == '123'){
 
-      Navigator.of(context).pushNamed("home_page", arguments: "首页");
+      Navigator.of(context).pushNamed("home_page", arguments: _userNameController.text);
+    }else{
+      // Fluttertoast.showToast(
+      //     msg: "Toast提示信息",
+      //     toastLength: Toast.LENGTH_SHORT,
+      //     gravity: ToastGravity.CENTER,
+      //     timeInSecForIos: 1,
+      //     backgroundColor: Colors.red,
+      //     textColor: Colors.white,
+      //     fontSize: 16.0
+      // );
     }
   }
   @override
@@ -40,12 +50,15 @@ class _MyLoginHome extends State<LoginPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            CircleAvatar(
+            Padding(
+              padding: EdgeInsets.fromLTRB(0, 0, 0, 50.0),
+              child: CircleAvatar(
               //头像半径s
-              radius: 60,
+              radius: 50,
               //头像图片 -> NetworkImage网络图片，AssetImage项目资源包图片, FileImage本地存储图片
               backgroundImage: NetworkImage(
                   'https://pic2.zhimg.com/v2-639b49f2f6578eabddc458b84eb3c6a1.jpg'),
+              ),
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -61,21 +74,24 @@ class _MyLoginHome extends State<LoginPage> {
                       child:TextField(
                         controller: _userNameController,
                         maxLength: 8,
-                        style: TextStyle(
-                          color: Colors.green[400],
-                        ),
+                        autofocus:false,
+                        style: TextStyle(color: Colors.yellowAccent,),
+                        //光标样式
+                        cursorWidth: 3.0,
+                        cursorColor:Colors.yellowAccent,
+                        cursorRadius: Radius.circular(5.0),
                         decoration: new InputDecoration(
                           hintText: '请输入用户名',
+                          // 提示文字
                           helperText: '输入1-8个字母，汉字或数字',
+                          helperStyle: TextStyle(fontSize: 13,color: Colors.yellowAccent,),
+                          // X 删除输入
                           suffixIcon:IconButton(
                             icon: new Icon(Icons.clear,
                                 color: Colors.black45),
                             onPressed: () {
                               _userNameController.clear();
                             },
-                          ),
-                          helperStyle: TextStyle(
-                            fontSize: 13,//字体变大
                           ),
                         ),
                       ) ,
@@ -96,10 +112,12 @@ class _MyLoginHome extends State<LoginPage> {
                       padding: new EdgeInsets.fromLTRB(6.0, 0.0, 52.0, 0.0),
                       child:TextField(
                         controller: _userPwdController,
-                        style: TextStyle(
-                          color: Colors.green[400],
-                        ),
-                        obscureText: true,
+                        style: TextStyle(color: Colors.yellowAccent,),
+                        obscureText: true, // 隐藏输入
+                        //光标样式
+                        cursorWidth: 3.0,
+                        cursorColor:Colors.yellowAccent,
+                        cursorRadius: Radius.circular(5.0),
                         decoration: new InputDecoration(
                           hintText: '请输入密码',
                           suffixIcon:IconButton(
@@ -116,23 +134,20 @@ class _MyLoginHome extends State<LoginPage> {
               ],
             ),
             Padding(
-                  padding: new EdgeInsets.fromLTRB(0.0, 52.0, 0.0, 0.0),
-                  child:FlatButton(
-                    child: Text("登陆"),
-                    textColor: Colors.blue,
+                  padding: EdgeInsets.fromLTRB(0,  54.0,  0,  0),
+                  child: FlatButton(
+                    child:Padding(
+                      padding: EdgeInsets.fromLTRB(52.0,  0,  52.0,  0),
+                      child: Text("确 定"),
+                    ),
+                    textColor: Colors.redAccent,
                     color: Colors.yellow,
                     splashColor:Colors.green,
                     highlightColor:Colors.pink,
                     shape:RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
                     onPressed:  _handleClickSubmit,
-                    // onPressed: () {
-                    //   //导航到新路由
-                    //   handleClickSubmit
-                    //   Navigator.of(context).pushNamed("home_page", arguments: "首页");
-                    // },
                   ), 
-            ),
-            
+            )
           ],
         ),
       ),
@@ -144,8 +159,8 @@ class _MyLoginHome extends State<LoginPage> {
     super.reassemble();
     print("<=======reassemble=========>");
   }
+  
 }
-
 
 
 
