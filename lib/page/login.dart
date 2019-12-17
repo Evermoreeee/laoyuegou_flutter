@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:dio/dio.dart';
+import 'package:oktoast/oktoast.dart';
 
 // import 'package:fluttertoast/fluttertoast.dart';
 // TODO:  登录 
@@ -22,15 +22,7 @@ class _MyLoginHome extends State<LoginPage> {
 
       Navigator.of(context).pushNamed("home_page", arguments: _userNameController.text);
     }else{
-      // Fluttertoast.showToast(
-      //     msg: "Toast提示信息",
-      //     toastLength: Toast.LENGTH_SHORT,
-      //     gravity: ToastGravity.CENTER,
-      //     timeInSecForIos: 1,
-      //     backgroundColor: Colors.red,
-      //     textColor: Colors.white,
-      //     fontSize: 16.0
-      // );
+      showToast("用户名或密码错误");
     }
   }
   @override

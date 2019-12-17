@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'page/login.dart';
 import 'page/homePage.dart';
+import 'package:oktoast/oktoast.dart';
 
 void main() => runApp(MyApp());
 
@@ -10,7 +11,8 @@ class MyApp extends StatelessWidget {
   
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return OKToast(
+      child: MaterialApp(
       title: '捞月狗',
       theme: ThemeData(
         // primarySwatch: Colors.green,
@@ -38,6 +40,7 @@ class MyApp extends StatelessWidget {
           }
         );
       }
+    )
     );
   }
 }

@@ -59,7 +59,7 @@ class ListContainer extends StatefulWidget {
 }
 
 class _ListContainerState extends State<ListContainer> {
-  List playList;
+  List<Object> playList = [];
   
   Future getListData ( {String name = '超人'} ) async {
     try{
@@ -67,13 +67,11 @@ class _ListContainerState extends State<ListContainer> {
       final response = await Dio().get<String>(url);
       final body = jsonDecode(response.toString());
         // List resultList  = json.decode(response.body)['result'];
-      var res = Result_body.fromJson(body).result;
-      print('<<==========请求成功============>>>>');
+      var result = Result_body.fromJson(body).result;
       setState(() {
-            playList = res;
+            playList = result;
       });
     }catch(e){
-      print('<<==========请求失败============>>>>');
       print(e.toString());
     }
   }
@@ -90,7 +88,7 @@ class _ListContainerState extends State<ListContainer> {
     return Container(
       
        child: ListView.builder(
-            itemCount: playList.length,
+            itemCount: playList?.length,
             itemBuilder: (BuildContext context, int index) {
               var item = playList[index];
               return _buildItem(item);
@@ -99,7 +97,6 @@ class _ListContainerState extends State<ListContainer> {
     );
   }
   
-
   Widget _buildItem(item){
     return Card(
       color: Colors.brown,
