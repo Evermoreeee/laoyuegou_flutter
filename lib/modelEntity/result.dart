@@ -1,31 +1,41 @@
-
-import 'package:json_annotation/json_annotation.dart';
-
+import 'package:json_annotation/json_annotation.dart'; 
+  
 part 'result.g.dart';
 
+
 @JsonSerializable()
-class Result {
-  final String author;
-  final String link;
-  final String pic;
-  final String type;
-  final String title;
-  final String lrc;
-  final int songid;
-  final String url;
-  Result({
-    this.author,
-    this.link,
-    this.pic,
-    this.type,
-    this.title,
-    this.lrc,
-    this.songid,
-    this.url
-  });
-  //反序列化
-  factory Result.fromJson(Map<String, dynamic> json) => _$ResultFromJson(json);
-  //序列化
+  class Result extends Object {
+
+  @JsonKey(name: 'author')
+  String author;
+
+  @JsonKey(name: 'link')
+  String link;
+
+  @JsonKey(name: 'pic')
+  String pic;
+
+  @JsonKey(name: 'type')
+  String type;
+
+  @JsonKey(name: 'title')
+  String title;
+
+  @JsonKey(name: 'lrc')
+  String lrc;
+
+  @JsonKey(name: 'songid')
+  int songid;
+
+  @JsonKey(name: 'url')
+  String url;
+
+  Result(this.author,this.link,this.pic,this.type,this.title,this.lrc,this.songid,this.url,);
+
+  factory Result.fromJson(Map<String, dynamic> srcJson) => _$ResultFromJson(srcJson);
+
   Map<String, dynamic> toJson() => _$ResultToJson(this);
+
 }
 
+  

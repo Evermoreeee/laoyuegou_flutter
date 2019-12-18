@@ -8,14 +8,14 @@ part of 'result.dart';
 
 Result _$ResultFromJson(Map<String, dynamic> json) {
   return Result(
-      author: json['author'] as String,
-      link: json['link'] as String,
-      pic: json['pic'] as String,
-      type: json['type'] as String,
-      title: json['title'] as String,
-      lrc: json['lrc'] as String,
-      songid: json['songid'] as int,
-      url: json['url'] as String);
+      json['author'] as String,
+      json['link'] as String,
+      json['pic'] as String,
+      json['type'] as String,
+      json['title'] as String,
+      json['lrc'] as String,
+      json['songid'] as int,
+      json['url'] as String);
 }
 
 Map<String, dynamic> _$ResultToJson(Result instance) => <String, dynamic>{

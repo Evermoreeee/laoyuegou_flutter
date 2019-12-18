@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 import 'dart:convert';
-import 'dart:io';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
-import '../modelEntity/result.dart';
 import '../modelEntity/result_body.dart';
 
 class HomePage extends StatelessWidget {
@@ -60,46 +59,102 @@ class ListContainer extends StatefulWidget {
 
 class _ListContainerState extends State<ListContainer> {
   List<Object> playList = [];
-  
-  Future getListData ( {String name = '超人'} ) async {
+  ScrollController _scrollController = ScrollController();
+  // 申明spinkit 
+  final spinkit = SpinKitRotatingCircle(
+    color: Colors.yellow,
+    size: 70.0,
+  );
+  final pumpingHeart = Center(
+    child: SpinKitPumpingHeart(color: Colors.red,size: 60.0,),
+  );
+
+  final spinkitdemo = SpinKitFadingCircle(
+      itemBuilder: (BuildContext context, int index) {
+        return DecoratedBox(
+          decoration: BoxDecoration(
+            color: index.isEven ? Colors.red : Colors.green,
+          ),
+        );
+      },
+  );
+
+  bool spinkitControll = true;
+
+  List<String> singerlist = [
+    '超人','承认','海口'
+  ];
+  /** 
+   * search 根据姓名搜索
+   * {String} name 姓名
+   * TODO: https://api.apiopen.top/searchMusic
+   */
+  Future<Null> getListData ( String name ) async {
     try{
       final url = "https://api.apiopen.top/searchMusic?name=${name}";
       final response = await Dio().get<String>(url);
       final body = jsonDecode(response.toString());
         // List resultList  = json.decode(response.body)['result'];
       var result = Result_body.fromJson(body).result;
-      setState(() {
+      new  Future.delayed(new  Duration(seconds:1),(){
+        setState(() {
             playList = result;
+            spinkitControll = false;
+        });
       });
+
     }catch(e){
       print(e.toString());
     }
   }
+  
+  // 下拉刷新
+  Future<Null> _handleRefresh(){
+    getListData('海口');
+    setState(() {
+        spinkitControll = true;
+    });
+  }
+
+  // 点击item 去详情
+  void _handleOnTap(Object item) {
+    print('_onLongPress');
+      Navigator.of(context).pushNamed("detail_page",arguments:item);
+  }
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    getListData();
+    _scrollController.dispose();
+    getListData('超人');
   }
-  
+
   @override
   Widget build(BuildContext context) {
-    
-    return Container(
-      
-       child: ListView.builder(
-            itemCount: playList?.length,
-            itemBuilder: (BuildContext context, int index) {
-              var item = playList[index];
-              return _buildItem(item);
-            }
-        ),
-    );
+      return Container(
+       // 添加spinkit 
+        child: spinkitControll ? pumpingHeart : RefreshIndicator(
+          child: ListView.builder(
+              itemCount: playList?.length,
+              itemBuilder: (BuildContext context, int index) {
+                var item = playList[index];
+                return  GestureDetector(
+                  child: _buildItem(item),
+                  onTap: () => _handleOnTap(item),
+                );
+              }
+          ),
+          onRefresh:_handleRefresh,
+          displacement: 40.0,
+          color: Colors.yellow,
+        ) 
+      );
   }
-  
+
   Widget _buildItem(item){
     return Card(
-      color: Colors.brown,
+      color: Colors.cyan,
       child: Padding(
         padding: EdgeInsets.all(12),
         child: Row(
@@ -114,7 +169,7 @@ class _ListContainerState extends State<ListContainer> {
                       '${item.author}-${item.title}',
                       textAlign: TextAlign.left,
                       style: TextStyle(
-                          color: Colors.cyan,
+                          color: Colors.white,
                           fontSize: 14.5
                        ),
                     ),
@@ -123,15 +178,15 @@ class _ListContainerState extends State<ListContainer> {
                       maxLines:3,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
-                        color: Colors.cyan,
+                        color: Colors.white,
                         fontSize: 12.0,
                       ),
-
                     )
                   ],
               ),
             ),
-            Icon(Icons.keyboard_arrow_right,color: Colors.cyan,)
+            Icon(Icons.keyboard_arrow_right,color: Colors.cyan,),
+            
           ],
           ),
       ),

@@ -1,10 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:oktoast/oktoast.dart';
+import 'package:provide/provide.dart';
 
+//路由
 import 'page/login.dart';
 import 'page/homePage.dart';
-import 'package:oktoast/oktoast.dart';
+import 'page/play_detail.dart';
+import 'provide/loading.dart';
 
-void main() => runApp(MyApp());
+void main() {
+  //状态
+  var counter = Counter();
+  var providers = Providers();
+  
+  providers
+    ..provide(Provider<Counter>.value(counter));
+  
+  runApp(ProviderNode(child: MyApp(), providers: providers));
+}
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
@@ -27,6 +40,7 @@ class MyApp extends StatelessWidget {
        */
       routes:{
         "home_page":(context) => HomePage(),
+        'detail_page':(context) => PlayDetails(),
       },
       home: LoginPage(title: '登陆'),
       /**
@@ -44,6 +58,30 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+
+class Login extends StatefulWidget {
+  Login({Key key}) : super(key: key);
+
+  _LoginState createState() => _LoginState();
+}
+
+class _LoginState extends State<Login> {
+  Future<Null> _handleRefresh(){
+    print('object');
+  }
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body:  RefreshIndicator(
+        child: Card(
+          color: Colors.yellow,
+        ),
+        onRefresh:_handleRefresh
+      )
+    );
+  }
+}
+
 
 class CustomScrollViewTestRoute extends StatelessWidget {
   @override
