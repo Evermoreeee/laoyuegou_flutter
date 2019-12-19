@@ -4,45 +4,68 @@ import 'dart:convert';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 import '../modelEntity/result_body.dart';
+import '../page/wangyi_center.dart';
 
 class HomePage extends StatelessWidget {
   HomePage({Key key}) : super(key: key);
   static String color1 = '#fff333';
+  // #fff444
+  static const Color themeColor = Colors.deepOrange;
 
-  // final String params;
+  // final String params ;
   @override
   Widget build(BuildContext context) {
-    //获取路由参数  
+    //获取路由参数
     var args = ModalRoute.of(context).settings.arguments;
-   
+
     return Scaffold(
-      appBar:  AppBar(
-          leading:  Icon(Icons.toll,color:Colors.cyan,),
-          title:  Text('你好 ${args} ',style: TextStyle(color: Colors.cyan[400]),),
-          backgroundColor: Colors.yellow,
-          centerTitle:true,
-          actions: <Widget>[
-              IconButton(
-                icon: Icon(Icons.track_changes,color:Colors.cyan,),
+      appBar: AppBar(
+        leading: Icon(
+          Icons.toll,
+          color: Colors.white,
+        ),
+        title: Text(
+          '你好 ${args} ',
+          style: TextStyle(color: Colors.white),
+        ),
+        backgroundColor: themeColor,
+        centerTitle: true,
+        actions: <Widget>[
+          IconButton(
+            icon: Hero(
+              tag: 'ttt',
+              child: Icon(
+                Icons.track_changes,
+                color: Colors.white,
               ),
-          ],
-      ),
-      body:Container(
-        child: ListContainer(),
-      ),
-      bottomNavigationBar:  BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        items: [
-          BottomNavigationBarItem(
-              icon:  Icon(Icons.leak_add), 
-              title:  Text('mo')
-              ),
-          BottomNavigationBarItem(
-              icon:  Icon(Icons.adjust), 
-              title:  Text('adjust')
-              ),
+            ),
+            onPressed: () => {
+              Navigator.of(context).pushNamed(
+                "wangyi_center",
+              )
+            },
+          ),
+          // GestureDetector(
+          //   child: Icon(Icons.track_changes,color:Colors.white,),
+          // ),
         ],
       ),
+      body: Container(
+        child: ListContainer(),
+      ),
+      // bottomNavigationBar:  BottomNavigationBar(
+      //   type: BottomNavigationBarType.fixed,
+      //   items: [
+      //     BottomNavigationBarItem(
+      //         icon:  Icon(Icons.leak_add),
+      //         title:  Text('mo')
+      //         ),
+      //     BottomNavigationBarItem(
+      //         icon:  Icon(Icons.adjust),
+      //         title:  Text('adjust')
+      //         ),
+      //   ],
+      // ),
     );
   }
 }
@@ -60,66 +83,66 @@ class ListContainer extends StatefulWidget {
 class _ListContainerState extends State<ListContainer> {
   List<Object> playList = [];
   ScrollController _scrollController = ScrollController();
-  // 申明spinkit 
+  // 申明spinkit
   final spinkit = SpinKitRotatingCircle(
     color: Colors.yellow,
     size: 70.0,
   );
   final pumpingHeart = Center(
-    child: SpinKitPumpingHeart(color: Colors.red,size: 60.0,),
+    child: SpinKitPumpingHeart(
+      color: Colors.red,
+      size: 60.0,
+    ),
   );
 
   final spinkitdemo = SpinKitFadingCircle(
-      itemBuilder: (BuildContext context, int index) {
-        return DecoratedBox(
-          decoration: BoxDecoration(
-            color: index.isEven ? Colors.red : Colors.green,
-          ),
-        );
-      },
+    itemBuilder: (BuildContext context, int index) {
+      return DecoratedBox(
+        decoration: BoxDecoration(
+          color: index.isEven ? Colors.red : Colors.green,
+        ),
+      );
+    },
   );
 
-  bool spinkitControll = true;
+  // bool spinkitControll = true;
 
-  List<String> singerlist = [
-    '超人','承认','海口'
-  ];
+  List<String> singerlist = ['超人', '承认', '海口'];
   /** 
    * search 根据姓名搜索
    * {String} name 姓名
    * TODO: https://api.apiopen.top/searchMusic
    */
-  Future<Null> getListData ( String name ) async {
-    try{
+  Future<Null> getListData(String name) async {
+    try {
       final url = "https://api.apiopen.top/searchMusic?name=${name}";
       final response = await Dio().get<String>(url);
       final body = jsonDecode(response.toString());
-        // List resultList  = json.decode(response.body)['result'];
+      // List resultList  = json.decode(response.body)['result'];
       var result = Result_body.fromJson(body).result;
-      new  Future.delayed(new  Duration(seconds:1),(){
+      new Future.delayed(new Duration(seconds: 1), () {
         setState(() {
-            playList = result;
-            spinkitControll = false;
+          playList = result;
+          // spinkitControll = false;
         });
       });
-
-    }catch(e){
+    } catch (e) {
       print(e.toString());
     }
   }
-  
+
   // 下拉刷新
-  Future<Null> _handleRefresh(){
+  Future<Null> _handleRefresh() {
     getListData('海口');
-    setState(() {
-        spinkitControll = true;
-    });
+    // setState(() {
+    //     spinkitControll = true;
+    // });
   }
 
   // 点击item 去详情
   void _handleOnTap(Object item) {
     print('_onLongPress');
-      Navigator.of(context).pushNamed("detail_page",arguments:item);
+    Navigator.of(context).pushNamed("detail_page", arguments: item);
   }
 
   @override
@@ -132,63 +155,103 @@ class _ListContainerState extends State<ListContainer> {
 
   @override
   Widget build(BuildContext context) {
-      return Container(
-       // 添加spinkit 
-        child: spinkitControll ? pumpingHeart : RefreshIndicator(
-          child: ListView.builder(
-              itemCount: playList?.length,
-              itemBuilder: (BuildContext context, int index) {
-                var item = playList[index];
-                return  GestureDetector(
-                  child: _buildItem(item),
-                  onTap: () => _handleOnTap(item),
+    return Container(
+      // 异步组建
+      child: FutureBuilder(
+          future: getListData(''),
+          builder: (BuildContext context, AsyncSnapshot snapshot) {
+            // 请求已结束
+            if (snapshot.connectionState == ConnectionState.done) {
+              if (snapshot.hasError) {
+                // 请求失败，显示错误
+                return Text("Error: ${snapshot.error}");
+              } else {
+                // 请求成功，显示 列表数据
+                return RefreshIndicator(
+                  child: ListView.builder(
+                      itemCount: playList?.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        var item = playList[index];
+                        return GestureDetector(
+                          child: _buildItem(item),
+                          onTap: () => _handleOnTap(item),
+                        );
+                      }),
+                  onRefresh: _handleRefresh,
+                  displacement: 40.0,
+                  color: Colors.yellow,
                 );
               }
-          ),
-          onRefresh:_handleRefresh,
-          displacement: 40.0,
-          color: Colors.yellow,
-        ) 
-      );
+            } else {
+              // 请求未结束，显示loading
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+          }),
+
+      // 添加spinkit
+      // child: spinkitControll ? pumpingHeart : RefreshIndicator(
+      //   child: ListView.builder(
+      //       itemCount: playList?.length,
+      //       itemBuilder: (BuildContext context, int index) {
+      //         var item = playList[index];
+      //         return  GestureDetector(
+      //           child: _buildItem(item),
+      //           onTap: () => _handleOnTap(item),
+      //         );
+      //       }
+      //   ),
+      //   onRefresh:_handleRefresh,
+      //   displacement: 40.0,
+      //   color: Colors.yellow,
+      // )
+    );
   }
 
-  Widget _buildItem(item){
+  Widget _buildItem(item) {
     return Card(
       color: Colors.cyan,
       child: Padding(
         padding: EdgeInsets.all(12),
         child: Row(
           children: <Widget>[
-            Image.network(item.pic ,height: 80,width: 80,fit: BoxFit.cover,),
-            SizedBox( width: 8,),
+            Image.network(
+              item.pic,
+              height: 80,
+              width: 80,
+              fit: BoxFit.cover,
+            ),
+            SizedBox(
+              width: 8,
+            ),
             Expanded(
               child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(
-                      '${item.author}-${item.title}',
-                      textAlign: TextAlign.left,
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 14.5
-                       ),
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text(
+                    '${item.author}-${item.title}',
+                    textAlign: TextAlign.left,
+                    style: TextStyle(color: Colors.white, fontSize: 14.5),
+                  ),
+                  Text(
+                    '${item.lrc}',
+                    maxLines: 3,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 12.0,
                     ),
-                    Text(
-                      '${item.lrc}',
-                      maxLines:3,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 12.0,
-                      ),
-                    )
-                  ],
+                  )
+                ],
               ),
             ),
-            Icon(Icons.keyboard_arrow_right,color: Colors.cyan,),
-            
+            Icon(
+              Icons.keyboard_arrow_right,
+              color: Colors.red,
+            )
           ],
-          ),
+        ),
       ),
     );
   }

@@ -16,10 +16,62 @@ class _PlayDetailsState extends State<PlayDetails> {
   //页面返回参数
   void _handleCallBack(){
     Navigator.of(context).pop("ok~!");  
-
     // Provide.value<Counter>(context).increment(9);
-
   }
+
+
+
+  // 弹出对话框
+  Future<bool> showDeleteConfirmDialog1() {
+    return showDialog<bool>(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text("提示"),
+          content: Text("这是一个对话框?"),
+          actions: <Widget>[
+            FlatButton(
+              child: Text("取消"),
+              onPressed: () => Navigator.of(context).pop(), // 关闭对话框
+            ),
+            FlatButton(
+              child: Text("删除"),
+              onPressed: () {
+                //关闭对话框并返回true
+                Navigator.of(context).pop(true);
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void showMySimpleDialog(BuildContext context){
+     showDialog(
+      context:context,
+      builder: (context){
+        return new AlertDialog(
+            content: Container(
+              width: 100,
+              height: 200,
+              color: Colors.cyan,
+              child: RaisedButton(
+                onPressed: () {
+                  var currentCounter = Provide.value<Counter>(context).value;
+                  currentCounter++;
+                  print('a  ${currentCounter}');
+                  Provide.value<Counter>(context).increment(currentCounter);
+                },
+                child: Text('增加'),
+              ),
+            ),
+          );
+      }
+    );
+  }
+
+
   @override
   Widget build(BuildContext context) {
     dynamic arguments = ModalRoute.of(context).settings.arguments;
@@ -54,6 +106,25 @@ class _PlayDetailsState extends State<PlayDetails> {
                 },
                 child: Text('增加'),
               ),
+            RaisedButton(
+                onPressed: ()async {
+                   bool delete = await  showDeleteConfirmDialog1();
+                  if (delete == null) {
+                      print("取消删除");
+                    } else {
+                      print("已确认删除");
+                      //... 删除文件
+                  }
+                },
+                child: Text('对话'),
+            ),
+            RaisedButton(
+                color: Colors.cyan,
+                onPressed: () {
+                    showMySimpleDialog(context);
+                },
+                child: Text('弹窗'),
+            ),
           ],
         )
       ),

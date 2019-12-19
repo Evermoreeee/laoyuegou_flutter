@@ -29,15 +29,16 @@ class _MyLoginHome extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         // appBar: AppBar(
-        //   title: Text(widget.title),
+        //   title: Text('logon'),
         // ),
-        body: Container(
-      decoration: BoxDecoration(
-        image: DecorationImage(
-          image: AssetImage("images/bg.jpg"),
-          fit: BoxFit.fitHeight,
-        ),
-      ),
+      body: Container(
+        color: Colors.yellow,
+      // decoration: BoxDecoration(
+      //   image: DecorationImage(
+      //     image: AssetImage("images/bg.jpg"),
+      //     fit: BoxFit.fitHeight,
+      //   ),
+      // ),
       child: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -57,7 +58,7 @@ class _MyLoginHome extends State<LoginPage> {
               children: <Widget>[
                 Padding(
                   padding: new EdgeInsets.fromLTRB(52.0, 0.0, 12.0, 0.0),
-                  child: Icon(Icons.person,color: Colors.yellow),
+                  child: Icon(Icons.person,color: Colors.deepOrange),
                 ),
                 Expanded(
                     child: 
@@ -67,17 +68,17 @@ class _MyLoginHome extends State<LoginPage> {
                         controller: _userNameController,
                         maxLength: 8,
                         autofocus:false,
-                        style: TextStyle(color: Colors.yellowAccent,),
+                        style: TextStyle(color: Colors.black87,),
                         //光标样式
                         cursorWidth: 3.0,
-                        cursorColor:Colors.yellowAccent,
+                        cursorColor:Colors.black87,
                         cursorRadius: Radius.circular(5.0),
                         decoration: new InputDecoration(
                           hintText: '请输入用户名',
                           // 提示文字
                           helperText: '输入1-8个字母，汉字或数字',
-                          helperStyle: TextStyle(fontSize: 13,color: Colors.yellowAccent,),
-                          // X 删除输入
+                          helperStyle: TextStyle(fontSize: 13,color: Colors.black87,),
+                          // X 删除输入21
                           suffixIcon:IconButton(
                             icon: new Icon(Icons.clear,
                                 color: Colors.black45),
@@ -96,7 +97,7 @@ class _MyLoginHome extends State<LoginPage> {
               children: <Widget>[
                 Padding(
                   padding: new EdgeInsets.fromLTRB(52.0, 0.0, 6.0, 0.0),
-                  child: Icon(Icons.lock,color: Colors.yellow),
+                  child: Icon(Icons.lock,color: Colors.deepOrange),
                 ),
                 Expanded(
                     child: 
@@ -104,11 +105,11 @@ class _MyLoginHome extends State<LoginPage> {
                       padding: new EdgeInsets.fromLTRB(6.0, 0.0, 52.0, 0.0),
                       child:TextField(
                         controller: _userPwdController,
-                        style: TextStyle(color: Colors.yellowAccent,),
+                        style: TextStyle(color: Colors.black87,),
                         obscureText: true, // 隐藏输入
                         //光标样式
                         cursorWidth: 3.0,
-                        cursorColor:Colors.yellowAccent,
+                        cursorColor:Colors.black87,
                         cursorRadius: Radius.circular(5.0),
                         decoration: new InputDecoration(
                           hintText: '请输入密码',
@@ -132,10 +133,11 @@ class _MyLoginHome extends State<LoginPage> {
                       padding: EdgeInsets.fromLTRB(52.0,  0,  52.0,  0),
                       child: Text("确 定"),
                     ),
-                    textColor: Colors.redAccent,
-                    color: Colors.yellow,
-                    splashColor:Colors.green,
-                    highlightColor:Colors.pink,
+                    textColor: Colors.white,
+                    color: Colors.black,
+                    splashColor:Colors.deepOrange,
+                    
+                    highlightColor:Colors.deepOrange,
                     shape:RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
                     onPressed:  _handleClickSubmit,
                   ), 

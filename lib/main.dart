@@ -7,7 +7,7 @@ import 'page/login.dart';
 import 'page/homePage.dart';
 import 'page/play_detail.dart';
 import 'provide/loading.dart';
-
+import 'page/wangyi_center.dart';
 void main() {
   //状态
   var counter = Counter();
@@ -26,14 +26,20 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return OKToast(
       child: MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: '捞月狗',
       theme: ThemeData(
-        // primarySwatch: Colors.green,
+        primarySwatch: Colors.deepOrange,
         hintColor: Colors.yellow,
-        // inputDecorationTheme: InputDecorationTheme(
-        //   labelStyle: TextStyle(color: Colors.yellow),//定义label字体样式
-        //   hintStyle: TextStyle(color: Colors.yellow, fontSize: 14.0)//定义提示文本样式
-        // )
+        inputDecorationTheme: InputDecorationTheme(
+          labelStyle: TextStyle(color: Colors.deepOrange),//定义label字体样式
+          hintStyle: TextStyle(color: Colors.deepOrange, fontSize: 14.0)//定义提示文本样式
+        ),
+        pageTransitionsTheme: PageTransitionsTheme(
+          builders: <TargetPlatform, PageTransitionsBuilder>{
+            TargetPlatform.android: CupertinoPageTransitionsBuilder(),
+            TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
+        }),
       ),
       /**
        * 注册路由表
@@ -41,6 +47,7 @@ class MyApp extends StatelessWidget {
       routes:{
         "home_page":(context) => HomePage(),
         'detail_page':(context) => PlayDetails(),
+        'wangyi_center':(context) => SliderView(),
       },
       home: LoginPage(title: '登陆'),
       /**
