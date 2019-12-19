@@ -7,12 +7,12 @@ import 'package:flutter/material.dart';
  * 如果没有约束其高度，则会使用PreferredSizeWidget指定的高度
  */
 class XFileAppbar extends StatefulWidget implements PreferredSizeWidget {
-
   final double contentHeight; //从外部指定高度
-  final Widget contentChild;  //从外部指定内容
+  final Widget contentChild; //从外部指定内容
   final Color statusBarColor; //设置statusbar的颜色
 
-  XFileAppbar({this.contentChild, this.contentHeight, this.statusBarColor}): super();
+  XFileAppbar({this.contentChild, this.contentHeight, this.statusBarColor})
+      : super();
 
   @override
   State<StatefulWidget> createState() {
@@ -21,9 +21,7 @@ class XFileAppbar extends StatefulWidget implements PreferredSizeWidget {
 
   @override
   Size get preferredSize => new Size.fromHeight(contentHeight);
-  
 }
-
 
 /**
  * 这里没有直接用SafeArea，而是用Container包装了一层
@@ -34,15 +32,14 @@ class _XFileAppbarState extends State<XFileAppbar> {
   @override
   Widget build(BuildContext context) {
     return new Container(
-        color: Colors.cyan,
-        child: new SafeArea(
+      color: Colors.cyan,
+      child: new SafeArea(
         top: true,
         child: widget.contentChild,
       ),
     );
   }
 }
-
 
 class SliderView extends StatefulWidget {
   SliderView({Key key}) : super(key: key);
@@ -51,74 +48,87 @@ class SliderView extends StatefulWidget {
 }
 
 class _SliderViewState extends State<SliderView> {
-
   static Color tabbarTextColor = Colors.black;
 
   final tabbarTextStyle = TextStyle(
-      color: Colors.black87,
-      fontSize: 18.0,
+    color: Colors.black87,
+    fontSize: 18.0,
   );
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: XFileAppbar(
-        contentChild: Container(
-          height:50.0 ,
-          color: Colors.cyan,
-          child: Center(
+    return DefaultTabController(
+      length: 4,
+      child: Scaffold(
+        appBar: XFileAppbar(
+          contentChild: Container(
+            height: 50.0,
+            color: Colors.cyan,
+            child: Center(
               child: Row(
                 children: <Widget>[
                   IconButton(
-                    icon: Icon(Icons.settings_input_antenna,color: tabbarTextColor,),
+                    icon: Icon(
+                      Icons.settings_input_antenna,
+                      color: tabbarTextColor,
+                    ),
                   ),
                   Expanded(
                     child: Padding(
-                      padding:  EdgeInsets.fromLTRB(24.0, 0.0, 24.0, 0.0),
-                      child: Row(
-                      children: <Widget>[
-                        Expanded(
-                          child: Center(
-                            child: Text('我的',),
-                          )
-                        ),
-                        Expanded(
-                          child: Center(
-                            child: Text('发现',style: TextStyle(
-                              fontSize: 18.0,
-                            ),),
-                          )
-                        ),
-                        Expanded(
-                          child: Center(
-                            child: Text('云村'),
-                          )
-                        ),
-                        Expanded(
-                          child: Center(
-                            child: Text('视频'),
-                          )
-                        ),
-                      ],
-                    ),
+                      padding: EdgeInsets.fromLTRB(24.0, 0.0, 24.0, 0.0),
+                      child: TabBar(
+                        isScrollable: true, //是否可以水品移动 多个tabs
+                        indicatorColor:Colors.cyan,
+                        labelStyle:TextStyle(fontSize: 16.0),
+                        unselectedLabelStyle:TextStyle(fontSize: 14.0),
+                        // indicatorSize:20.0,
+                        tabs: <Widget>[
+                          Text('我的'),
+                          Text('发现'),
+                          Text('云村'),
+                          Text('视频'),
+                        ],
+                      ),
                     ),
                   ),
                   IconButton(
-                    icon: Icon(Icons.search,color: tabbarTextColor,),
+                    icon: Icon(
+                      Icons.search,
+                      color: tabbarTextColor,
+                    ),
                   ),
                 ],
               ),
+            ),
           ),
-        ), 
-        contentHeight: 44.0,
-        // statusBarColor: bkgColor,
-      ),
-      body: Container(
-        alignment: Alignment.topCenter,
-        child: Center(
-          child: Hero(
-            tag: 'ttt',
-            child: Icon(Icons.track_changes,size: 150.0,color:Colors.cyan[100],),
-          ),
+          contentHeight: 44.0,
+          // statusBarColor: bkgColor,
+        ),
+        body: TabBarView(
+          children: [
+            Container(
+              alignment: Alignment.topCenter,
+              color: Colors.black,
+              child: Center(
+                child: Hero(
+                  tag: 'ttt',
+                  child: Icon(
+                    Icons.track_changes,
+                    size: 150.0,
+                    color: Colors.cyan[100],
+                  ),
+                ),
+              ),
+            ),
+            Container(
+              color: Colors.yellow,
+              child: Icon(Icons.dashboard),
+            ),
+            Container(
+              color: Colors.greenAccent,
+              child: Icon(Icons.verified_user),
+            ),
+            Icon(Icons.face),
+          ],
         ),
       ),
     );
